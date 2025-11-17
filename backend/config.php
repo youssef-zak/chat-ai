@@ -1,8 +1,20 @@
 <?php
 // Global configuration for the chat application.
 return [
-    // Path to the SQLite database file.
-    'database_path' => __DIR__ . '/../storage/chat.sqlite',
+    // Database connection. By default the project ships with SQLite, but you can
+    // switch the driver to "mysql" and provide the corresponding credentials.
+    'database' => [
+        'driver' => 'sqlite',
+        'path' => __DIR__ . '/../storage/chat.sqlite',
+
+        // MySQL settings (used only when driver === 'mysql').
+        'host' => '127.0.0.1',
+        'port' => 3306,
+        'dbname' => 'chat_ai',
+        'username' => 'root',
+        'password' => '',
+        'charset' => 'utf8mb4',
+    ],
 
     // Gemini API endpoint and key (replace with your own key in production).
     'gemini_endpoint' => 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',

@@ -1,49 +1,120 @@
 <?php
 /**
- * Simple PDO wrapper for interacting with the SQLite database.
+ * Simple PDO wrapper for interacting with either SQLite or MySQL.
  */
 class Database
 {
     private \PDO $pdo;
+    private string $driver;
+    private ?string $databaseName = null;
 
-    public function __construct(string $path)
+    /**
+     * @param array{driver?: string, path?: string, host?: string, port?: int, dbname?: string, username?: string, password?: string, charset?: string} $config
+     */
+    public function __construct(array $config)
     {
-        $this->pdo = new \PDO('sqlite:' . $path);
+        $this->driver = $config['driver'] ?? 'sqlite';
+
+        if ($this->driver === 'mysql') {
+            $host = $config['host'] ?? '127.0.0.1';
+            $port = (int) ($config['port'] ?? 3306);
+            $dbname = $config['dbname'] ?? 'chat_ai';
+            $charset = $config['charset'] ?? 'utf8mb4';
+            $username = $config['username'] ?? 'root';
+            $password = $config['password'] ?? '';
+
+            $this->databaseName = $dbname;
+            $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $host, $port, $dbname, $charset);
+            $this->pdo = new \PDO($dsn, $username, $password);
+        } else {
+            $path = $config['path'] ?? (__DIR__ . '/../storage/chat.sqlite');
+            $directory = dirname($path);
+            if (!is_dir($directory)) {
+                mkdir($directory, 0775, true);
+            }
+
+            $this->pdo = new \PDO('sqlite:' . $path);
+        }
+
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->initialize();
     }
 
     private function initialize(): void
     {
-        $this->pdo->exec(
-            'CREATE TABLE IF NOT EXISTS messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                role TEXT NOT NULL,
-                content TEXT NOT NULL,
-                agent TEXT,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )'
-        );
-
-        // Ensure the agent column exists for older databases.
-        $columns = $this->pdo->query('PRAGMA table_info(messages)')->fetchAll(\PDO::FETCH_ASSOC);
-        $hasAgentColumn = array_reduce($columns, static function ($carry, $column) {
-            return $carry || $column['name'] === 'agent';
-        }, false);
-        if (!$hasAgentColumn) {
-            $this->pdo->exec('ALTER TABLE messages ADD COLUMN agent TEXT');
+        if ($this->driver === 'mysql') {
+            $this->pdo->exec(
+                'CREATE TABLE IF NOT EXISTS messages (
+                    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    role VARCHAR(20) NOT NULL,
+                    content TEXT NOT NULL,
+                    agent VARCHAR(64) NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
+            );
+        } else {
+            $this->pdo->exec(
+                'CREATE TABLE IF NOT EXISTS messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    role TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    agent TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )'
+            );
         }
 
-        $this->pdo->exec(
-            'CREATE TABLE IF NOT EXISTS tickets (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                subject TEXT NOT NULL,
-                description TEXT NOT NULL,
-                priority TEXT NOT NULL DEFAULT "normal",
-                status TEXT NOT NULL DEFAULT "open",
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )'
-        );
+        $this->ensureAgentColumn();
+
+        if ($this->driver === 'mysql') {
+            $this->pdo->exec(
+                'CREATE TABLE IF NOT EXISTS tickets (
+                    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    subject VARCHAR(255) NOT NULL,
+                    description TEXT NOT NULL,
+                    priority VARCHAR(16) NOT NULL DEFAULT "normal",
+                    status VARCHAR(16) NOT NULL DEFAULT "open",
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
+            );
+        } else {
+            $this->pdo->exec(
+                'CREATE TABLE IF NOT EXISTS tickets (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    subject TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    priority TEXT NOT NULL DEFAULT "normal",
+                    status TEXT NOT NULL DEFAULT "open",
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )'
+            );
+        }
+    }
+
+    private function ensureAgentColumn(): void
+    {
+        if ($this->driver === 'mysql') {
+            $schema = $this->databaseName ?: $this->pdo->query('SELECT DATABASE()')->fetchColumn();
+            $stmt = $this->pdo->prepare(
+                'SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = :schema AND TABLE_NAME = :table AND COLUMN_NAME = :column'
+            );
+            $stmt->execute([
+                ':schema' => $schema,
+                ':table' => 'messages',
+                ':column' => 'agent',
+            ]);
+            $hasAgentColumn = (int) $stmt->fetchColumn() > 0;
+        } else {
+            $columns = $this->pdo->query('PRAGMA table_info(messages)')->fetchAll(\PDO::FETCH_ASSOC);
+            $hasAgentColumn = array_reduce($columns, static function ($carry, $column) {
+                return $carry || $column['name'] === 'agent';
+            }, false);
+        }
+
+        if (!$hasAgentColumn) {
+            $columnDefinition = $this->driver === 'mysql' ? 'VARCHAR(64) NULL' : 'TEXT';
+            $this->pdo->exec('ALTER TABLE messages ADD COLUMN agent ' . $columnDefinition);
+        }
     }
 
     public function insertMessage(string $role, string $content, ?string $agent = null): void

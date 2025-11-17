@@ -7,7 +7,7 @@ require_once __DIR__ . '/../backend/database.php';
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 try {
-    $db = new Database($config['database_path']);
+    $db = new Database($config['database']);
 
     if ($method === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true, 512, JSON_THROW_ON_ERROR);

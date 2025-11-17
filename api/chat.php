@@ -33,7 +33,7 @@ try {
         exit;
     }
 
-    $db = new Database($config['database_path']);
+    $db = new Database($config['database']);
     $db->insertMessage('user', $message, $agentId);
 
     $payload = [

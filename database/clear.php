@@ -2,7 +2,7 @@
 $config = require __DIR__ . '/../backend/config.php';
 require_once __DIR__ . '/../backend/database.php';
 
-$db = new Database($config['database_path']);
+$db = new Database($config['database']);
 $db->clearMessages();
 $db->clearTickets();
 

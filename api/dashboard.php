@@ -5,7 +5,7 @@ $config = require __DIR__ . '/../backend/config.php';
 require_once __DIR__ . '/../backend/database.php';
 
 try {
-    $db = new Database($config['database_path']);
+    $db = new Database($config['database']);
     $stats = $db->getDashboardStats();
     echo json_encode(['stats' => $stats]);
 } catch (Throwable $e) {
