@@ -1,0 +1,19 @@
+-- مخطط MySQL لقاعدة بيانات مركز القيادة الذكي.
+-- شغّل الملف بعد إنشاء قاعدة البيانات (CREATE DATABASE chat_ai CHARACTER SET utf8mb4;).
+
+CREATE TABLE IF NOT EXISTS messages (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    role VARCHAR(20) NOT NULL,
+    content TEXT NOT NULL,
+    agent VARCHAR(64) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tickets (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    subject VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    priority VARCHAR(16) NOT NULL DEFAULT 'normal',
+    status VARCHAR(16) NOT NULL DEFAULT 'open',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
