@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>يزيد | Sity Cloud Mini Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div aria-hidden="true" class="orb orb-one"></div>
+    <div aria-hidden="true" class="orb orb-two"></div>
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">Sity Cloud · تجربة زائر أسرع</p>
+        <h1>يزيد، الميني شات الذكي اللي يوجّه عملاءك فوراً</h1>
+        <p class="lede">
+          يزيد هو بوابة توجيه فورية بلغة طبيعية بسيطة. يفهم نية الزائر ويرد
+          بجملة أو اتنين ويوصله لأهم صفحات سحابة Sity بدون تعقيد.
+        </p>
+        <ul class="hero-list">
+          <li>تجربة زجاجية خفيفة ومتجاوبة مع كل الشاشات</li>
+          <li>ردود مختصرة ومدعومة بـ Gemini</li>
+          <li>تخصيص كامل لروابطك ومصطلحات شركتك</li>
+        </ul>
+        <div class="hero-tags" role="list">
+          <span role="listitem">ذكاء اصطناعي مدمج</span>
+          <span role="listitem">اسم المساعد: يزيد</span>
+          <span role="listitem">من تطوير Sity Cloud</span>
+        </div>
+      </section>
+      <section class="chat-card" aria-label="يزيد مساعد Sity Cloud">
+        <header class="chat-head">
+          <div class="bot-id">
+            <span class="bot-avatar" aria-hidden="true">ي</span>
+            <div>
+              <p class="bot-name">يزيد</p>
+              <p class="bot-role">مساعد Sity Cloud الموجّه</p>
+            </div>
+          </div>
+          <button id="reset-btn" type="button" class="ghost-btn">
+            تصفير المحادثة
+          </button>
+        </header>
+        <div class="status-row" aria-live="polite">
+          <span class="status-pill">جاهز للتوجيه</span>
+          <span class="status-pill soft">يركّز على صفحاتك الأساسية</span>
+        </div>
+        <div id="chat-stream" class="chat-stream" aria-live="polite"></div>
+        <form id="chat-form" class="chat-form">
+          <label class="sr-only" for="chat-input">السؤال</label>
+          <input
+            id="chat-input"
+            type="text"
+            name="prompt"
+            placeholder="مثلاً: فين أسعار سحابة Sity؟"
+            autocomplete="off"
+            required
+          />
+          <button type="submit" id="send-btn">أرسل</button>
+        </form>
+        <p class="footnote">
+          يزيد مش خدمة عملاء كاملة، لكنه يعرف أهم الصفحات والإجراءات داخل
+          Sity Cloud ويوصلك لها بجملة واحدة.
+        </p>
+      </section>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
