@@ -1,0 +1,231 @@
+/*
+Theme Name: GlassViolet
+Theme URI: https://example.com/glassviolet
+Author: ChatGPT
+Description: واجهة ووردبريس بلمسة زجاجية باللون الأبيض والبنفسجي الفاتح مع دعم كامل لأدوات ووردبريس والمنتور.
+Version: 1.0.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: glassviolet
+Tags: custom-background, custom-logo, custom-menu, featured-images, translation-ready, blog, portfolio, glassmorphism, white, purple
+*/
+
+:root {
+  --gv-bg: #f4f2ff;
+  --gv-primary: #8f70ff;
+  --gv-secondary: #c8bfff;
+  --gv-dark: #1f1c3d;
+  --gv-light: rgba(255, 255, 255, 0.8);
+  --gv-radius: 24px;
+  --gv-blur: 18px;
+  --gv-transition: all 0.35s ease;
+  --gv-font: 'Poppins', 'Cairo', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--gv-font);
+  margin: 0;
+  color: var(--gv-dark);
+  background: linear-gradient(135deg, var(--gv-bg) 0%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--gv-primary);
+  text-decoration: none;
+  transition: var(--gv-transition);
+}
+
+a:hover {
+  color: #6d43ff;
+}
+
+.gv-glass {
+  background: var(--gv-light);
+  border-radius: var(--gv-radius);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 20px 45px rgba(31, 28, 61, 0.15);
+  backdrop-filter: blur(var(--gv-blur));
+}
+
+header.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 3vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  background: rgba(244, 242, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+header .site-branding {
+  display: flex;
+  flex-direction: column;
+}
+
+header nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+header nav ul li {
+  font-weight: 600;
+}
+
+.gv-button {
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--gv-primary), #b898ff);
+  color: white;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(143, 112, 255, 0.35);
+}
+
+.hero {
+  padding: 4rem 5vw 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+  gap: 2rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin: 0 0 1rem;
+}
+
+.hero .hero-card {
+  padding: 2.5rem;
+}
+
+.hero-visual {
+  position: relative;
+  min-height: 320px;
+}
+
+.hero-visual::before,
+.hero-visual::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(30px);
+  animation: float 8s ease-in-out infinite;
+}
+
+.hero-visual::before {
+  width: 280px;
+  height: 280px;
+  background: rgba(143, 112, 255, 0.4);
+  top: 10%;
+  left: 5%;
+}
+
+.hero-visual::after {
+  width: 180px;
+  height: 180px;
+  background: rgba(200, 191, 255, 0.6);
+  bottom: 8%;
+  right: 5%;
+  animation-delay: 2s;
+}
+
+.section {
+  padding: 3rem 5vw;
+}
+
+.section-title {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(120deg, rgba(143, 112, 255, 0.35), transparent);
+  transition: var(--gv-transition);
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+.site-footer {
+  padding: 2.5rem 5vw;
+  background: rgba(31, 28, 61, 0.95);
+  color: white;
+}
+
+.site-footer a {
+  color: #dfd8ff;
+}
+
+.site-footer .footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.post-card {
+  padding: 2rem;
+}
+
+.post-card h2 {
+  margin-top: 0;
+}
+
+.animation-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.7s ease;
+}
+
+.animation-fade.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.05);
+  }
+}
+
+@media (max-width: 768px) {
+  header nav ul {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
