@@ -3,6 +3,10 @@
 $hero_button_text = get_theme_mod( 'glassviolet_hero_button_text', __( 'استكشف المدونة', 'glassviolet' ) );
 $default_link     = get_permalink( get_option( 'page_for_posts' ) );
 $hero_button_link = get_theme_mod( 'glassviolet_hero_button_link', $default_link ? $default_link : home_url( '/' ) );
+
+if ( have_posts() ) {
+    the_post();
+}
 ?>
 <section class="hero">
     <div class="hero-card gv-glass animation-fade">
@@ -30,6 +34,12 @@ $hero_button_link = get_theme_mod( 'glassviolet_hero_button_link', $default_link
 <?php endif; ?>
 </div>
 </section>
+
+<?php
+if ( have_posts() ) {
+    rewind_posts();
+}
+?>
 <section class="section animation-fade" id="services">
 <h2 class="section-title"><?php esc_html_e( 'الخدمات والمميزات', 'glassviolet' ); ?></h2>
 <div class="cards-grid">
