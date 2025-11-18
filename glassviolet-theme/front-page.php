@@ -1,10 +1,17 @@
 <?php get_header(); ?>
+<?php
+$hero_button_text = get_theme_mod( 'glassviolet_hero_button_text', __( 'استكشف المدونة', 'glassviolet' ) );
+$default_link     = get_permalink( get_option( 'page_for_posts' ) );
+$hero_button_link = get_theme_mod( 'glassviolet_hero_button_link', $default_link ? $default_link : home_url( '/' ) );
+?>
 <section class="hero">
-<div class="hero-card gv-glass animation-fade">
-<h1><?php echo esc_html( get_theme_mod( 'glassviolet_hero_title', __( 'تصميم زجاجي مذهل لموقعك', 'glassviolet' ) ) ); ?></h1>
-<p><?php echo wp_kses_post( get_theme_mod( 'glassviolet_hero_text', __( 'قالب ووردبريس متكامل يدعم المنتور وجميع خصائص النظام مع واجهة عصرية.', 'glassviolet' ) ) ); ?></p>
-<a class="gv-button" href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>"><?php esc_html_e( 'استكشف المدونة', 'glassviolet' ); ?></a>
-</div>
+    <div class="hero-card gv-glass animation-fade">
+        <h1><?php echo esc_html( get_theme_mod( 'glassviolet_hero_title', __( 'تصميم زجاجي مذهل لموقعك', 'glassviolet' ) ) ); ?></h1>
+        <p><?php echo wp_kses_post( get_theme_mod( 'glassviolet_hero_text', __( 'قالب ووردبريس متكامل يدعم المنتور وجميع خصائص النظام مع واجهة عصرية.', 'glassviolet' ) ) ); ?></p>
+        <?php if ( $hero_button_text ) : ?>
+            <a class="gv-button" href="<?php echo esc_url( $hero_button_link ); ?>"><?php echo esc_html( $hero_button_text ); ?></a>
+        <?php endif; ?>
+    </div>
 <div class="hero-visual gv-glass animation-fade" data-delay="150">
 <?php if ( has_post_thumbnail() ) : ?>
 <?php the_post_thumbnail( 'large' ); ?>
